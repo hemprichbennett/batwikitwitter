@@ -27,8 +27,8 @@ bat_titles <- read_html("https://en.wikipedia.org/wiki/List_of_bats") %>%
 
 
 # Extract just the text from the HTML
-bat_text <- bat_info %>%
-  mutate(content = map_chr(content, ~html_text(read_html(.))))
+# bat_text <- bat_info %>%
+#   mutate(content = map_chr(content, ~html_text(read_html(.))))
 
 #####And now we're on Dave's far less elegant code #####
 
@@ -115,17 +115,48 @@ while(tweetable==FALSE){
 
 #####twitter things ####
 
-setwd(here())
-api_keys <- read.csv("keysecretetc.csv", stringsAsFactors = FALSE)
+# setwd(here())
 # 
-# setup_twitter_oauth(consumer_key = api_keys$consumer_key,
-#                     consumer_secret = api_keys$consumer_secret,
-#                     access_token = api_keys$access_token,
-#                     access_secret = api_keys$access_secret)
+# ##Vignette here http://rtweet.info/articles/auth.html
 # 
-# 
+ api_keys <- read.csv("keysecretetc.csv", stringsAsFactors = FALSE)
+#
+# ## whatever name you assigned to your created app
+ appname <- "Bat fact tweeting"
+
+ ## api key (example below is not a real key)
+ key <- api_keys$consumer_key
+
+ ## api secret (example below is not a real key)
+ secret <- api_keys$consumer_secret
+
+
+ twitter_token <- create_token(
+   app = appname,
+   consumer_key = key,
+   consumer_secret = secret)
+
+ ## path of home directory
+# home_directory <- path.expand("~/")
+ 
+ ## combine with name for token
+# file_name <- file.path(home_directory, "twitter_token.rds")
+ 
+ ## save token to home directory
+# saveRDS(twitter_token, file = file_name)
+ 
+# cat(paste0("TWITTER_PAT=", file_name),
+#     file = file.path(home_directory, ".Renviron"),
+#     append = TRUE)
+
+#
+ # setup_twitter_oauth(consumer_key = api_keys$consumer_key,
+ #                     consumer_secret = api_keys$consumer_secret,
+ #                     access_token = api_keys$access_token,
+ #                     access_secret = api_keys$access_secret)
+
 # tweet(outstring)
 
-post_tweet(status = outstring, media = NULL, token = NULL,
+post_tweet(status = outstring, media = NULL, token = twitter_token,
            in_reply_to_status_id = NULL)
 
