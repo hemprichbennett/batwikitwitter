@@ -11,11 +11,11 @@ library(urltools)
 library(stringr)
 library(tokenizers)
 library(rtweet)
-library(here)
+
 
 
 #####Noam's wikipedia querying ####
-
+#First, we get some basic information from wikipedia
 
 # Get all speceies-level page titles from the Wikipedia list of bats
 bat_titles <- read_html("https://en.wikipedia.org/wiki/List_of_bats") %>%
@@ -26,14 +26,11 @@ bat_titles <- read_html("https://en.wikipedia.org/wiki/List_of_bats") %>%
 
 
 
-# Extract just the text from the HTML
-# bat_text <- bat_info %>%
-#   mutate(content = map_chr(content, ~html_text(read_html(.))))
-
 #####And now we're on Dave's far less elegant code #####
 
 
-#Playing with the resulting text to make a potential tweet
+#Now we select a random bat-page, then some random sequential sentences from it, then if they pass some
+#QC steps, we output it
 tweetable <- FALSE 
 while(tweetable==FALSE){  
   bat_info <- map_df(bat_titles[sample(seq(1,length(bat_titles)),1)], function(x) {
@@ -114,48 +111,12 @@ while(tweetable==FALSE){
 }
 
 #####twitter things ####
+#now we just tweet the output
 
-# setwd(here())
-# 
 # ##Vignette here http://rtweet.info/articles/auth.html
-# 
- api_keys <- read.csv("keysecretetc.csv", stringsAsFactors = FALSE)
-#
-# ## whatever name you assigned to your created app
- appname <- "Bat fact tweeting"
 
- ## api key (example below is not a real key)
- key <- api_keys$consumer_key
-
- ## api secret (example below is not a real key)
- secret <- api_keys$consumer_secret
-
-
- twitter_token <- create_token(
-   app = appname,
-   consumer_key = key,
-   consumer_secret = secret)
-
- ## path of home directory
-# home_directory <- path.expand("~/")
- 
- ## combine with name for token
-# file_name <- file.path(home_directory, "twitter_token.rds")
- 
- ## save token to home directory
-# saveRDS(twitter_token, file = file_name)
- 
-# cat(paste0("TWITTER_PAT=", file_name),
-#     file = file.path(home_directory, ".Renviron"),
-#     append = TRUE)
-
-#
- # setup_twitter_oauth(consumer_key = api_keys$consumer_key,
- #                     consumer_secret = api_keys$consumer_secret,
- #                     access_token = api_keys$access_token,
- #                     access_secret = api_keys$access_secret)
-
-# tweet(outstring)
+##twitter token was generated with the instructions above, but I found it easier to just source the  
+twitter_token <- readRDS('/Users/davehemprichbennett/twitter_token.rds')
 
 post_tweet(status = outstring, media = NULL, token = twitter_token,
            in_reply_to_status_id = NULL)
