@@ -8,3 +8,5 @@ The script allows you to use it for scheduling, in which case you will just leav
 This bot starts by querying your given list of pages, selecting a given page within there. If it is able to find one that passes various basic QC measures, it looks on wikimedia for the page's main image, then gets the image creator's creditation. If all of these checks are passed, it downloads the picture and then tweets your message and image.
 
 Then, depending on what wait_in_r is been set to, the script either ends or waits for the next iteration.
+
+This code is free for you to use and modify as you see fit. All I ask in return is that in your bots bio you credit me with 'bot made with code by @hammerheadbat'
