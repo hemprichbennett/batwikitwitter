@@ -77,6 +77,10 @@ while(A==FALSE){ #I schedule this by using an infinite loop with Sys.sleep used.
       source_pos <- which(names(sections)=='Sources') #Ditto for sources
       sections <- sections[-source_pos]
     }
+    if('Footnotes' %in% names(sections)){
+      source_pos <- which(names(sections)=='Footnotes') #Ditto for Footnotes
+      sections <- sections[-source_pos]
+    }
     if(length(sections)==0){
       next()
     }
