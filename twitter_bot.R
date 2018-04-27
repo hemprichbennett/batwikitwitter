@@ -128,7 +128,7 @@ while(A==FALSE){ #I schedule this by using an infinite loop with Sys.sleep used.
     photo_details <- str_split(bat_info[1,2], pattern = '\" src')[[1]][1]
     photo_details <- str_split(photo_details, pattern = "<img alt=\\\"")[[1]][2] #This is the NAME of the image, to be queried on wikimedia
     photo_details <- gsub(' ', '_', photo_details)
-    if(nchar(photo_details)==0){#Unable to get a decent photo (another good photo may be available in the page in a different position but the code isn't complex enough to search for it) so skipping
+    if(is.null(photo_details) || nchar(photo_details)==0){#Unable to get a decent photo (another good photo may be available in the page in a different position but the code isn't complex enough to search for it) so skipping
       print('no photo available by current means')
       photo <- F
     }else{photo <- T}
