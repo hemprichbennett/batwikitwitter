@@ -122,7 +122,9 @@ while(A==FALSE){ #I schedule this by using an infinite loop with Sys.sleep used.
 
     outstring <- paste(sentences[c(start_point, end_point)], collapse = ' ') #Make a string out of this
 
-
+    if(grepl('You can help Wikipedia by expanding it', outstring)){
+      next()#This stops tweeting out info about stubs
+    }
     ####Now its wikimedia time to get an image and its creator ####
 
     photo_details <- str_split(bat_info[1,2], pattern = '\" src')[[1]][1]
