@@ -64,9 +64,12 @@ while(A==FALSE){ #I schedule this by using an infinite loop with Sys.sleep used.
     sections <- str_split(bat_text[row,2], ".+\\[edit\\]")[[1]]
     if(grepl('This article needs additional citations for verification', sections[1])){
       sections <- sections[-1] # I don't want the first entry, its a bit dull and gets in the way of the next line
+      names(sections) <- section_names
+    }else{
+      names(sections[2:length(sections)]) <- section_names
     }
 
-    names(sections[2:length(sections)]) <- section_names
+    
     sections <- gsub('\\\n', '', sections) #Clean out all the newline characters
     sections <- gsub('\\[.\\]', '', sections) #Clean out all the references, they'll make no sense out of context
     sections <- gsub('\\\\', '', sections)
