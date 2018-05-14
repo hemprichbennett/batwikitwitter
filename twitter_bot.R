@@ -107,6 +107,7 @@ while(A==FALSE){ #I schedule this by using an infinite loop with Sys.sleep used.
       sections <- sections[-measurement_position]
     }
     if(length(sections)==0){
+      print('sections are 0 zero length')
       next()
     }
 
@@ -114,6 +115,7 @@ while(A==FALSE){ #I schedule this by using an infinite loop with Sys.sleep used.
 
     sentences <- tokenize_sentences(sections[section_choice])[[1]] #Convert the block of text into a vector wher each item is a sentence
     if(length(sentences)<2){ #Skip if the section is empty or tiny
+      cat('small sentence:', sentences, '\n')
       next()
     }
     n_sentences<- length(sentences) #Get how many sentences there are, required for the next two lines
@@ -123,6 +125,9 @@ while(A==FALSE){ #I schedule this by using an infinite loop with Sys.sleep used.
     outstring <- paste(sentences[c(start_point, end_point)], collapse = ' ') #Make a string out of this
 
     if(grepl('You can help Wikipedia by expanding it', outstring)){
+      next()#This stops tweeting out info about stubs
+    }
+    if(grepl('Contents', outstring)){
       next()#This stops tweeting out info about stubs
     }
     ####Now its wikimedia time to get an image and its creator ####
