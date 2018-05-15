@@ -68,8 +68,7 @@ while(A==FALSE){ #I schedule this by using an infinite loop with Sys.sleep used.
     }else{
       names(sections[2:length(sections)]) <- section_names
     }
-
-    
+ 
     sections <- gsub('\\\n', '', sections) #Clean out all the newline characters
     sections <- gsub('\\[.\\]', '', sections) #Clean out all the references, they'll make no sense out of context
     sections <- gsub('\\\\', '', sections)
@@ -77,16 +76,17 @@ while(A==FALSE){ #I schedule this by using an infinite loop with Sys.sleep used.
       print('too short')
       next()
     }
-    if('References' %in% names(sections)){
-      ref_pos <- which(names(sections)=='References') #Find where the references section is, get rid of it as it would make for a terrible tweet
+    if('References' %in% section_names){
+      print('killing refs')
+      ref_pos <- which(section_names=='References') #Find where the references section is, get rid of it as it would make for a terrible tweet
       sections <- sections[-ref_pos]
     }
-    if('Sources' %in% names(sections)){
-      source_pos <- which(names(sections)=='Sources') #Ditto for sources
+    if('Sources' %in% section_names){
+      source_pos <- which(section_names=='Sources') #Ditto for sources
       sections <- sections[-source_pos]
     }
-    if('Footnotes' %in% names(sections)){
-      source_pos <- which(names(sections)=='Footnotes') #Ditto for Footnotes
+    if('Footnotes' %in% section_names){
+      source_pos <- which(section_names=='Footnotes') #Ditto for Footnotes
       sections <- sections[-source_pos]
     }
     if('Literature cited' %in% names(sections)){
@@ -133,12 +133,16 @@ while(A==FALSE){ #I schedule this by using an infinite loop with Sys.sleep used.
     if(grepl('Contents', outstring)){
       next()#This stops tweeting out info about stubs
     }
+    if(grepl('/(\b201[2-5]\b)/g)', outstring)){
+      print('year in outstring')
+      next()
+    }
     ####Now its wikimedia time to get an image and its creator ####
 
     photo_details <- str_split(bat_info[1,2], pattern = '\" src')[[1]][1]
     photo_details <- str_split(photo_details, pattern = "<img alt=\\\"")[[1]][2] #This is the NAME of the image, to be queried on wikimedia
     photo_details <- gsub(' ', '_', photo_details)
-    if(is.null(photo_details) | nchar(photo_details)==0){#Unable to get a decent photo (another good photo may be available in the page in a different position but the code isn't complex enough to search for it) so skipping
+    if(is.null(photo_details) | nchar(photo_details)==0){#Unable to get a decent photo (another good photo may be available in the page in a different position but the code isn't complex enough to search for it) 
       print('no photo available by current means')
       photo <- F
     }else{photo <- T}
@@ -216,7 +220,7 @@ while(A==FALSE){ #I schedule this by using an infinite loop with Sys.sleep used.
   #now we just tweet the output
   if(photo==T){
     post_tweet(status = outstring, token = twitter_token,
-               in_reply_to_status_id = NULL, media = './temp.jpg')
+              in_reply_to_status_id = NULL, media = './temp.jpg')
     file.remove('temp.jpg')
   }else{
     post_tweet(status = outstring, token = twitter_token,
