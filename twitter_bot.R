@@ -61,6 +61,7 @@ while(A==FALSE){ #I schedule this by using an infinite loop with Sys.sleep used.
     print(sp_name)
     section_names <- str_extract_all(bat_text[row,2], ".+\\[edit\\]")[[1]] #Break the wall of text up into names and items
     section_names <- gsub('\\[edit\\]', '', section_names)
+    print(section_names)
     sections <- str_split(bat_text[row,2], ".+\\[edit\\]")[[1]]
     if(grepl('This article needs additional citations for verification', sections[1])){
       sections <- sections[-1] # I don't want the first entry, its a bit dull and gets in the way of the next line
@@ -79,7 +80,10 @@ while(A==FALSE){ #I schedule this by using an infinite loop with Sys.sleep used.
     if('References' %in% section_names){
       print('killing refs')
       ref_pos <- which(section_names=='References') #Find where the references section is, get rid of it as it would make for a terrible tweet
+      cat('ref_pos is', ref_pos,'\n')
+      cat('sections were ', sections,'\n')
       sections <- sections[-ref_pos]
+      cat('sections are now', sections,'\n')
     }
     if('Sources' %in% section_names){
       source_pos <- which(section_names=='Sources') #Ditto for sources
