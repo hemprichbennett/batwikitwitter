@@ -14,7 +14,7 @@ library(here)
 
 setwd(here())
 
-wait_in_r <- TRUE
+wait_in_r <- T
 wait_duration <- 211*60 #Number of seconds to wait
 base_url <- "https://en.wikipedia.org/wiki/List_of_bats"
 hashtag <- "#bats" #If you don't want a hashtag just assign this an empty character string
@@ -77,35 +77,57 @@ while(A==FALSE){ #I schedule this by using an infinite loop with Sys.sleep used.
       print('too short')
       next()
     }
+    mismatched_sections <- F #The QC gets confused as the first section frequently doesn't have a length, so we need to control for this when removing bad sections
+    if(length(sections) != length(section_names)){
+      mismatched_sections <- T
+    }
     if('References' %in% section_names){
       print('killing refs')
       ref_pos <- which(section_names=='References') #Find where the references section is, get rid of it as it would make for a terrible tweet
       cat('ref_pos is', ref_pos,'\n')
       cat('sections were ', sections,'\n')
-      sections <- sections[-ref_pos]
+      if(mismatched_sections==T){
+        sections <- sections[-(ref_pos+1)]
+      }else{sections <- sections[-ref_pos]}
+      
       cat('sections are now', sections,'\n')
     }
     if('Sources' %in% section_names){
+      
       source_pos <- which(section_names=='Sources') #Ditto for sources
-      sections <- sections[-source_pos]
+      if(mismatched_sections==T){
+        sections <- sections[-(source_pos+1)]
+      }else{sections <- sections[-source_pos]}
+      
     }
     if('Footnotes' %in% section_names){
       source_pos <- which(section_names=='Footnotes') #Ditto for Footnotes
-      sections <- sections[-source_pos]
+      if(mismatched_sections==T){
+        sections <- sections[-(source_pos+1)]
+      }else{sections <- sections[-source_pos]}
     }
     if('Literature cited' %in% names(sections)){
       source_pos <- which(names(sections)=='Literature cited') #Ditto for Footnotes
-      sections <- sections[-source_pos]
+      if(mismatched_sections==T){
+        sections <- sections[-(source_pos+1)]
+      }else{sections <- sections[-source_pos]}
     }
     if('Notes' %in% names(sections)){
       source_pos <- which(names(sections)=='Notes') #Ditto for Footnotes
-      sections <- sections[-source_pos]
+      if(mismatched_sections==T){
+        sections <- sections[-(source_pos+1)]
+      }else{sections <- sections[-source_pos]}
     }
     if('External links' %in% names(sections)){
       source_pos <- which(names(sections)=='Literature cited') #Ditto for Footnotes
-      sections <- sections[-source_pos]
+      if(mismatched_sections==T){
+        sections <- sections[-(source_pos+1)]
+      }else{sections <- sections[-source_pos]}
     }
     if(length(sections)==0){
+      next()
+    }
+    if(is.na(sections)[1]){
       next()
     }
 
@@ -146,7 +168,7 @@ while(A==FALSE){ #I schedule this by using an infinite loop with Sys.sleep used.
     photo_details <- str_split(bat_info[1,2], pattern = '\" src')[[1]][1]
     photo_details <- str_split(photo_details, pattern = "<img alt=\\\"")[[1]][2] #This is the NAME of the image, to be queried on wikimedia
     photo_details <- gsub(' ', '_', photo_details)
-    if(is.null(photo_details) | nchar(photo_details)==0){#Unable to get a decent photo (another good photo may be available in the page in a different position but the code isn't complex enough to search for it) 
+    if(is.null(photo_details) | is.na(photo_details)| nchar(photo_details)==0){#Unable to get a decent photo (another good photo may be available in the page in a different position but the code isn't complex enough to search for it) 
       print('no photo available by current means')
       photo <- F
     }else{photo <- T}
@@ -222,14 +244,14 @@ while(A==FALSE){ #I schedule this by using an infinite loop with Sys.sleep used.
   #####twitter things ####
   ##Vignette of instructions for using it here http://rtweet.info/articles/auth.html
   #now we just tweet the output
-  if(photo==T){
-    post_tweet(status = outstring, token = twitter_token,
-              in_reply_to_status_id = NULL, media = './temp.jpg')
-    file.remove('temp.jpg')
-  }else{
-    post_tweet(status = outstring, token = twitter_token,
-               in_reply_to_status_id = NULL)
-  }
+   if(photo==T){
+     post_tweet(status = outstring, token = twitter_token,
+               in_reply_to_status_id = NULL, media = './temp.jpg')
+     file.remove('temp.jpg')
+   }else{
+     post_tweet(status = outstring, token = twitter_token,
+                in_reply_to_status_id = NULL)
+   }
 
   print(Sys.time())
 
