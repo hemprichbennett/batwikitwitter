@@ -1,5 +1,7 @@
 # batwikitwitter
 
+Update: due to some changes made to wikipedia itself this bot now crashes a lot, and usually fails to pull wikipedia photos. I'll rewrite it at some point.
+
 Before using the script to use a twitter bot, you'll need to create a token for your bot using twitters apps. Instructions can be found here http://rtweet.info/articles/auth.html though note I didn't bother making the token into a environment variable, I found it easier just to load mine in at the beginning of this script. Whatever works best for you
 
 
