@@ -20,7 +20,7 @@ base_url <- "https://en.wikipedia.org/wiki/List_of_bats"
 hashtag <- "#bats" #If you don't want a hashtag just assign this an empty character string
 
 ##twitter token was generated with the instructions here(http://rtweet.info/articles/auth.html), but I found it easier to just load the token rather than making it an environment variable
-twitter_token <- readRDS('/Users/davehemprichbennett/twitter_token.rds')
+twitter_token <- readRDS(here('twitter_token.rds'))
 
 
 #####Noam's wikipedia querying ####
