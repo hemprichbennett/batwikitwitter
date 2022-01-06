@@ -14,7 +14,7 @@ library(here)
 
 setwd(here())
 
-wait_in_r <- T
+wait_in_r <- F
 wait_duration <- 211*60 #Number of seconds to wait
 base_url <- "https://en.wikipedia.org/wiki/List_of_bats"
 hashtag <- "#bats" #If you don't want a hashtag just assign this an empty character string
