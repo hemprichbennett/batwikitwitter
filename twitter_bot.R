@@ -13,7 +13,7 @@ library(rtweet)
 library(here)
 
 setwd(here())
-
+print(Sys.time())
 wait_in_r <- F
 wait_duration <- 211*60 #Number of seconds to wait
 base_url <- "https://en.wikipedia.org/wiki/List_of_bats"
